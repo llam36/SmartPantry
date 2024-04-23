@@ -13,19 +13,23 @@ struct ContentView: View {
     @StateObject var pantryItemManager = PantryItemManager()
     var body: some View {
         TabView {
-            PantryView()
-                .tabItem { Label("Home", systemImage: "house") }
-                .environmentObject(pantryItemManager)
-            ExpirationView()
-                .tabItem { Label("Expiration", systemImage: "calendar.badge.exclamationmark") }
-                .environmentObject(pantryItemManager)
-            CameraView()
-                .tabItem { Label("Scan", systemImage: "camera.metering.matrix") }
-                .environmentObject(pantryItemManager)
-            NotificationView()
-                .tabItem { Label("Notification", systemImage: "bell") }
-            ProfileView()
-                .tabItem { Label("Profile", systemImage: "person") }
+            Group {
+                PantryView()
+                    .tabItem { Label("Home", systemImage: "house") }
+                    .environmentObject(pantryItemManager)
+                ExpirationView()
+                    .tabItem { Label("Expiration", systemImage: "calendar.badge.exclamationmark") }
+                    .environmentObject(pantryItemManager)
+                CameraView()
+                    .tabItem { Label("Scan", systemImage: "camera.metering.matrix") }
+                    .environmentObject(pantryItemManager)
+                NotificationView()
+                    .tabItem { Label("Notification", systemImage: "bell") }
+                ProfileView()
+                    .tabItem { Label("Profile", systemImage: "person") }
+            }
+            .toolbar(.visible, for: .tabBar)
+            .toolbarBackground(Color.white, for: .tabBar)
         }
         .accentColor(Color("Green"))
         .frame(minWidth: 300, maxWidth: .infinity,
@@ -33,7 +37,7 @@ struct ContentView: View {
         .onAppear {
             UITabBar.appearance().backgroundColor = UIColor(.white)
             UITabBar.appearance().unselectedItemTintColor =
-                UIColor(white: 0.1, alpha: 0.7)
+            UIColor(Color.black)
         }
     }
 }

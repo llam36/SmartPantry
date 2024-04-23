@@ -30,7 +30,7 @@ struct CameraView: View {
                 HStack {
                     if self.camera.isTaken {
                         Button(action: { if !self.camera.isSaved { self.camera.savePic(pantryItemManager: self.pantryItemManager) }}, label: {
-                            Text(self.camera.isSaved ? "Saved" : "Save").foregroundColor(.black).fontWeight(.semibold).padding(.vertical, 10).padding(.horizontal, 20).background(Color.white).clipShape(Capsule())
+                            Text(self.camera.isSaved ? "Processed" : "Process").foregroundColor(.black).fontWeight(.semibold).padding(.vertical, 10).padding(.horizontal, 20).background(Color.white).clipShape(Capsule())
                         }).padding(.leading)
                         Spacer()
                     } else {
