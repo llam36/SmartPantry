@@ -48,13 +48,35 @@ app.post("/get-pantry", async (req, res) => {
 
     try {
       const response = await axios(config);
-      return res
-        .status(200)
-        .send(
-          response.data.line_items.filter(
-            (e) => e.description != null || e.full_description != null
-          )
-        );
+      const filtered_response = response.data.line_items.filter(
+        (e) => e.description != null
+      );
+      let result = [];
+
+      for (var i = 0; i < filtered_response.length; i++) {
+        result.push({
+          name:
+            filtered_response[i].normalized_description != null
+              ? filtered_response[i].normalized_description
+              : filtered_response[i].description,
+          quantity: {
+            value:
+              filtered_response[i].quantity != null
+                ? filtered_response[i].quantity.toString()
+                : "1",
+            unit:
+              filtered_response[i].unit_of_measure != null
+                ? filtered_response[i].unit_of_measure
+                : "item",
+            ttl: 1,
+          },
+          price:
+            filtered_response[i].total != null
+              ? filtered_response[i].total.toString()
+              : 0,
+        });
+      }
+      return res.status(200).send(result);
     } catch (error) {
       return res.status(400).json(error);
     }
