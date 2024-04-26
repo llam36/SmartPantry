@@ -94,6 +94,7 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
                 self.session.addOutput(self.output)
             }
             self.session.commitConfiguration()
+            self.logCameraEvent(message: "Camera session started")
         } catch {
             print(error.localizedDescription)
         }
@@ -103,7 +104,9 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         DispatchQueue.global(qos: .background).async {
             self.output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
             DispatchQueue.main.async {
-                withAnimation { self.isTaken.toggle() }
+                withAnimation { self.isTaken.toggle()
+                self.logCameraEvent(message: "Picture taken")
+                }
             }
         }
     }
@@ -131,6 +134,7 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
                 withAnimation { self.isTaken.toggle() }
                 // clearing
                 self.isSaved = false
+                self.logCameraEvent(message: "Picture retaken")
             }
         }
     }
@@ -187,6 +191,34 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
         
         task.resume()
     }
+    
+    private func logCameraEvent(message: String) {
+            let logMessage = "\(Date()): \(message)"
+            appendLogToFile(logMessage: logMessage)
+        }
+
+        private func appendLogToFile(logMessage: String) {
+            let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("logs.log")
+
+            // Ensure unwrapping of the URL, since it's optional
+            if let fileURL = fileURL {
+                let finalLogMessage = "\(logMessage)\n"
+
+                if let data = finalLogMessage.data(using: .utf8) {
+                    if FileManager.default.fileExists(atPath: fileURL.path) {
+                        // Append to existing file
+                        if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
+                            fileHandle.seekToEndOfFile()
+                            fileHandle.write(data)
+                            fileHandle.closeFile()
+                        }
+                    } else {
+                        // Create new file
+                        try? data.write(to: fileURL, options: .atomicWrite)
+                    }
+                }
+            }
+        }
 }
 
 struct CameraPreview: UIViewRepresentable {

@@ -11,6 +11,7 @@ import UIKit
 
 struct ContentView: View {
     @StateObject var pantryItemManager = PantryItemManager()
+    @StateObject var viewModel = AppTimerManager()
     var body: some View {
         TabView {
             Group {
