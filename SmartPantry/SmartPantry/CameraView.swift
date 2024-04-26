@@ -8,14 +8,21 @@
 import AVFoundation
 import SwiftUI
 import UIKit
+import os
 
 struct CameraView: View {
     @StateObject var camera = CameraModel()
     @EnvironmentObject var pantryItemManager: PantryItemManager
+    @State private var startTime = Date()
     
     var body: some View {
         ZStack {
-            CameraPreview(camera: self.camera).ignoresSafeArea(.all, edges: .all)
+            CameraPreview(camera: self.camera).ignoresSafeArea(.all, edges: .all).onAppear{
+                startTime = Date()
+            }.onDisappear{
+                let timeSpent = Date().timeIntervalSince(startTime)
+                logTimeSpent(viewName: "CameraView", timeSpent: timeSpent)
+            }
             VStack {
                 if self.camera.isTaken {
                     HStack {
@@ -48,6 +55,44 @@ struct CameraView: View {
             self.camera.Check()
         })
     }
+    
+    private func logTimeSpent(viewName: String, timeSpent: TimeInterval) {
+            let logMessage = "Time spent on \(viewName): \(timeSpent) seconds"
+            let log = OSLog(subsystem: "com.SmartPantry.SmartPantry", category: "UserInteraction")
+            os_log("%{public}@", log: log, type: .info, logMessage)
+            appendLogToFile(logMessage: logMessage)
+        }
+
+        private func logCurrentSectionTime() {
+            let currentSection = "CameraView"
+            let timeSpent = Date().timeIntervalSince(startTime)
+            logTimeSpent(viewName: currentSection, timeSpent: timeSpent)
+        }
+
+        private func appendLogToFile(logMessage: String) {
+            let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("logs.log")
+
+            // Ensure unwrapping of the URL, since it's optional
+            if let fileURL = fileURL {
+                let timeStamp = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .long)
+                let finalLogMessage = "\(timeStamp): \(logMessage)\n"
+
+                if let data = finalLogMessage.data(using: .utf8) {
+                    if FileManager.default.fileExists(atPath: fileURL.path) {
+                        // Append to existing file
+                        if let fileHandle = try? FileHandle(forWritingTo: fileURL) {
+                            fileHandle.seekToEndOfFile()
+                            fileHandle.write(data)
+                            fileHandle.closeFile()
+                        }
+                    } else {
+                        // Create new file
+                        try? data.write(to: fileURL, options: .atomicWrite)
+                    }
+                }
+            }
+        }
+
 }
 
 import Foundation
