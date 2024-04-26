@@ -5,11 +5,14 @@ import express, { json, urlencoded } from "express";
 import normalizePort from "normalize-port";
 import multer from "multer";
 import cors from "cors";
+import { Dropbox } from "dropbox";
+import fetch from "node-fetch";
 
 config();
 const app = express();
 const upload = multer();
 
+app.use(express.text());
 app.use(cors());
 app.use(json());
 app.use(urlencoded({ extended: true }));
@@ -17,8 +20,35 @@ app.use(upload.single("image"));
 
 const port = normalizePort(process.env.PORT || "3000");
 
+const dbx = new Dropbox({
+  clientId: process.env.DROPBOX_CLIENT_ID,
+  refreshToken: process.env.DROPBOX_API_KEY,
+  fetch: fetch,
+});
+
 app.get("/", (req, res) => {
   res.send("Smart Pantry API");
+});
+
+app.post("/upload", async (req, res) => {
+  try {
+    console.log("Uploading");
+    let data = JSON.stringify(req.body);
+    console.log(data);
+
+    data = data.replace(/\\n/g, "\n");
+
+    const buffer = Buffer.from(data.substring(2, data.length - 5), "utf-8");
+    const dropboxDestination = "/logs.txt";
+    const result = await dbx.filesUpload({
+      path: dropboxDestination,
+      contents: buffer,
+      mode: { ".tag": "overwrite" },
+    });
+    return res.status(200).send(result);
+  } catch (exception) {
+    return res.status(500).json({ error: "Error occured: " + exception });
+  }
 });
 
 app.post("/get-pantry", async (req, res) => {
@@ -49,7 +79,7 @@ app.post("/get-pantry", async (req, res) => {
     try {
       const response = await axios(config);
       const filtered_response = response.data.line_items.filter(
-        (e) => e.description != null
+        (e) => e.description != null && e.type == "food"
       );
       let result = [];
 
@@ -82,6 +112,14 @@ app.post("/get-pantry", async (req, res) => {
     }
   }
   return res.status(400).json({ error: "File is not a JPG image" });
+});
+
+app.get("/get-logs", async (req, res) => {
+  const dropboxDestination = "/logs.txt";
+  const result = await dbx.filesDownload({
+    path: dropboxDestination,
+  });
+  res.send(result.result.fileBinary.toString());
 });
 
 app.listen(port, () => {
