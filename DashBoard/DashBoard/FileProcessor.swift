@@ -18,6 +18,7 @@ class FileProcessor {
         }
         
         do {
+            print("passed in SelectedDate = \(selectedDate)")
             let fileContent = try String(contentsOf: fileURL)
             return processContent(fileContent, selectedDate: selectedDate)
         } catch {

@@ -33,10 +33,26 @@ struct ContentView: View {
                 .foregroundColor(.white)
                 .fontWeight(.bold)
                 .padding()
-            
                 
                 if !views.isEmpty {
                     VStack {
+                        HStack{
+                            Spacer()
+                            HStack{
+                                Spacer()
+                                Button(action: {
+                                    views = FileProcessor.processLogFile(selectedDate: selectedDate)
+                                }) {
+                                    Text("Refresh")
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .background(Color.blue)
+                                        .cornerRadius(10)
+                                }
+                                .padding()
+                            }
+                        }
                         Chart {
                             ForEach(views, id: \.name) { view in
                                 let percentage = (view.seconds / views.map(\.seconds).reduce(0, +)) * 100
@@ -100,6 +116,8 @@ struct ContentView: View {
                 .colorMultiply(Color.gray.opacity(0.5))
         )
         .onChange(of: selectedDate) { newDate in
+            print(newDate)
+            print(selectedDate)
             views = FileProcessor.processLogFile(selectedDate: newDate)
         }
     }
