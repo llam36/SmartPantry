@@ -25,6 +25,7 @@
 		4E7221352B98FD2100D9A762 /* PantrySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7221342B98FD2100D9A762 /* PantrySection.swift */; };
 		4E7221392B991F7E00D9A762 /* PantrySectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7221382B991F7E00D9A762 /* PantrySectionModel.swift */; };
 		4E72213B2B9A120F00D9A762 /* PantryItemManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E72213A2B9A120F00D9A762 /* PantryItemManager.swift */; };
+		4E72C2782BDC6043006CE068 /* AppTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E72C2772BDC6043006CE068 /* AppTimerManager.swift */; };
 		4E91741D2BB512BC006318D7 /* ExpirationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E91741C2BB512BC006318D7 /* ExpirationView.swift */; };
 		4E91741F2BB60661006318D7 /* SloganCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E91741E2BB60661006318D7 /* SloganCard.swift */; };
 /* End PBXBuildFile section */
@@ -50,6 +51,7 @@
 		4E7221342B98FD2100D9A762 /* PantrySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PantrySection.swift; sourceTree = "<group>"; };
 		4E7221382B991F7E00D9A762 /* PantrySectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PantrySectionModel.swift; sourceTree = "<group>"; };
 		4E72213A2B9A120F00D9A762 /* PantryItemManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PantryItemManager.swift; sourceTree = "<group>"; };
+		4E72C2772BDC6043006CE068 /* AppTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTimerManager.swift; sourceTree = "<group>"; };
 		4E91741C2BB512BC006318D7 /* ExpirationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExpirationView.swift; path = SmartPantry/ExpirationView.swift; sourceTree = SOURCE_ROOT; };
 		4E91741E2BB60661006318D7 /* SloganCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SloganCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -107,6 +109,7 @@
 				4E59DAAC2B98562D009C7A63 /* ProfileView.swift */,
 				4E25F2852B980FF80073DE98 /* PantryView.swift */,
 				4E72212B2B98E67700D9A762 /* NotificationView.swift */,
+				4E72C2772BDC6043006CE068 /* AppTimerManager.swift */,
 				35EAB84B2B983020009E462D /* CameraView.swift */,
 				4E91741C2BB512BC006318D7 /* ExpirationView.swift */,
 				4E72213A2B9A120F00D9A762 /* PantryItemManager.swift */,
@@ -212,6 +215,7 @@
 				4E7221352B98FD2100D9A762 /* PantrySection.swift in Sources */,
 				4E2E8C742B967F6B002A0840 /* SmartPantryApp.swift in Sources */,
 				4E91741D2BB512BC006318D7 /* ExpirationView.swift in Sources */,
+				4E72C2782BDC6043006CE068 /* AppTimerManager.swift in Sources */,
 				4E25F2842B97C7590073DE98 /* PantryItem.swift in Sources */,
 				4E7221392B991F7E00D9A762 /* PantrySectionModel.swift in Sources */,
 				4E91741F2BB60661006318D7 /* SloganCard.swift in Sources */,
