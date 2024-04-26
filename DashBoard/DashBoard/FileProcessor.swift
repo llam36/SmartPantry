@@ -12,20 +12,72 @@ import Foundation
 
 class FileProcessor {
     static func processLogFile(selectedDate: Date) -> [(name: String, seconds: Double)] {
-        guard let fileURL = Bundle.main.url(forResource: "logs", withExtension: "txt") else {
-            print("logs.txt file not found.")
-            return []
+            guard let fileURL = Bundle.main.url(forResource: "logs", withExtension: "txt") else {
+                print("logs.txt file not found.")
+                return []
+            }
+            
+            // Fetch data from URL
+            let result = fetchDataFromURL()
+            
+            // Handle the result of fetchDataFromURL()
+            switch result {
+            case .success(let fileContent):
+                // Process the file content
+                return processContent(fileContent, selectedDate: selectedDate)
+            case .failure(let error):
+                // Handle the error
+                print("Error fetching data: \(error)")
+                return []
+            }
+        }
+    static func fetchDataFromURL() -> Result<String, Error> {
+        guard let url = URL(string: "https://alpine-dogfish-402322.ue.r.appspot.com/get-logs") else {
+            return .failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil))
         }
         
-        do {
-            print("passed in SelectedDate = \(selectedDate)")
-            let fileContent = try String(contentsOf: fileURL)
-            return processContent(fileContent, selectedDate: selectedDate)
-        } catch {
-            print("Error reading file: \(error)")
-            return []
+        var result: Result<String, Error>!
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            defer {
+                semaphore.signal()
+            }
+            
+            if let error = error {
+                result = .failure(error)
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                result = .failure(NSError(domain: "Invalid HTTP response", code: 0, userInfo: nil))
+                return
+            }
+            
+            if !(200...299).contains(httpResponse.statusCode) {
+                result = .failure(NSError(domain: "HTTP status code: \(httpResponse.statusCode)", code: 0, userInfo: nil))
+                return
+            }
+            
+            guard let data = data else {
+                result = .failure(NSError(domain: "No data received", code: 0, userInfo: nil))
+                return
+            }
+            
+            if let responseDataString = String(data: data, encoding: .utf8) {
+                result = .success(responseDataString)
+            } else {
+                result = .failure(NSError(domain: "Failed to convert data to string", code: 0, userInfo: nil))
+            }
         }
+        
+        task.resume()
+        semaphore.wait()
+        
+        return result
     }
+
+
     
     private static func processContent(_ content: String, selectedDate: Date) -> [(name: String, seconds: Double)] {
         // Split the content into lines

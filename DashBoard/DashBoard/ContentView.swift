@@ -116,8 +116,8 @@ struct ContentView: View {
                 .colorMultiply(Color.gray.opacity(0.5))
         )
         .onChange(of: selectedDate) { newDate in
-            print(newDate)
-            print(selectedDate)
+//            print(newDate)
+//            print(selectedDate)
             views = FileProcessor.processLogFile(selectedDate: newDate)
         }
     }
