@@ -26,6 +26,12 @@ class PantryItemManager: ObservableObject {
     func clearPantry() {
         pantries = []
     }
+    
+    func remove(offsets: IndexSet) {
+        pantries.remove(atOffsets: offsets)
+        print(pantries)
+        
+    }
     func getExpiringItem() -> [PantryItemModel] {
         let shuffledPantries = pantries.shuffled()
         

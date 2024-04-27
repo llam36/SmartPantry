@@ -23,12 +23,12 @@ struct PantryView: View {
                 }
 
 
-            ScrollView {
+//            ScrollView {
                 SloganCard()
                 PantrySection(itemList: pantryItemManager.pantries, sectionTitle: REFRIGERATOR_SECTION_TITLE)
-            }
-            .frame(maxHeight: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/)
-            .background(Color(white: 0.95))
+//            }
+//            .frame(maxHeight: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/)
+//            .background(Color(white: 0.95))
         }
         .frame(maxHeight: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/)
         .background(Color(.white))

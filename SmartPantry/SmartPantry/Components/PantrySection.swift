@@ -10,11 +10,22 @@ import SwiftUI
 struct PantrySection: View {
     var itemList: [PantryItemModel]
     var sectionTitle: PantrySectionModel
+    @Environment(\.defaultMinListRowHeight) var minRowHeight
+    @EnvironmentObject var pantryItemManager: PantryItemManager
+    @State private var isEditing = false
+    
+    func deleteItems (at offsets: IndexSet) {
+        // Delete items from the itemList
+        pantryItemManager.remove(offsets: offsets)
+        print("hihi")
+    }
+    
     var body: some View {
         VStack {
+          
             HStack {
                 Text(sectionTitle.title)
-                    .frame(maxWidth: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/, alignment: .leading)
+                    .frame(maxWidth:  .infinity, alignment: .leading)
                     .padding(.leading, 20)
                     .padding(.bottom, 5)
                     .padding(.top, 10)
@@ -26,23 +37,34 @@ struct PantrySection: View {
                     .frame(maxWidth: 20, maxHeight: 12)
                     .padding(.trailing, 20)
                     .foregroundColor(Color(white: 0.3))
+                
             }
+            
             if (!itemList.isEmpty) {
-                VStack {
-                    ForEach(itemList) { item in
-                        PantryItem(pantryItem: item, pantryItemSectionTitle: sectionTitle)
+//                VStack {
+                    List {
+                        Section {
+                            ForEach(itemList) { item in
+                                    PantryItem(pantryItem: item, pantryItemSectionTitle: sectionTitle)
+                                }
+                            .onDelete(perform: deleteItems)
+                        }
                     }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                .padding(.bottom, 10)
+//                    .frame(minHeight: minRowHeight * 3).border(Color.red)
+//                }
+//                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+//                .padding(.bottom, 10)
             }
         }
-        .frame(maxWidth: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .top)
+        
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color(white: 0.95))
         .padding([.top], 5)
     }
 }
 
-#Preview {
-    PantrySection(itemList: [PantryItemModel(id: "1", itemTitle: "Apple", loggedDate: Date(), quantity: "3",expiredDate: Date.now), PantryItemModel(id: "2", itemTitle: "Apple", loggedDate: Date(), quantity: "3",expiredDate: Date.now), PantryItemModel(id: "3", itemTitle: "Apple", loggedDate: Date(), quantity: "3",expiredDate: Date.now)], sectionTitle: REFRIGERATOR_SECTION_TITLE)
+struct PantrySection_Previews: PreviewProvider {
+    static var previews: some View {
+        PantrySection(itemList: [PantryItemModel(id: "1", itemTitle: "Apple", loggedDate: Date(), quantity: "3", expiredDate: Date()), PantryItemModel(id: "2", itemTitle: "Apple", loggedDate: Date(), quantity: "3", expiredDate: Date()), PantryItemModel(id: "3", itemTitle: "Apple", loggedDate: Date(), quantity: "3", expiredDate: Date())], sectionTitle: REFRIGERATOR_SECTION_TITLE).environmentObject(PantryItemManager())
+    }
 }

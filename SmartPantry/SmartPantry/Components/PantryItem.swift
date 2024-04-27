@@ -43,10 +43,10 @@ struct PantryItem: View {
                 .padding(10)
                 .frame(minWidth: 60, alignment: .trailing)
         }
-        .padding([.trailing, .leading], 10)
-        .frame(maxWidth: 400)
-        .cornerRadius(3.0)
-        .background(Color(.white)).clipShape(RoundedRectangle(cornerRadius: 15))
+//        .padding([.trailing, .leading], 10)
+//        .frame(maxWidth: 400)
+//        .cornerRadius(3.0)
+//        .background(Color(.white)).clipShape(RoundedRectangle(cornerRadius: 15))
     }
 
     func calculateDayInterval(start: Date, end: Date) -> String {
