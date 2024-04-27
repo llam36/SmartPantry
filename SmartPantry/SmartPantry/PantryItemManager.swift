@@ -8,7 +8,7 @@
 import Foundation
 
 class PantryItemManager: ObservableObject {
-    @Published private(set) var pantries: [PantryItemModel] = []
+    @Published var pantries: [PantryItemModel] = []
     
     func addPantry(pantriesJson: [PantryItemJson]) {
         for item in pantriesJson {
@@ -29,8 +29,16 @@ class PantryItemManager: ObservableObject {
     
     func remove(offsets: IndexSet) {
         pantries.remove(atOffsets: offsets)
+        print("Pantries after remove: ")
         print(pantries)
         
+    }
+    func removeById(id: String) {
+        if let index = pantries.firstIndex(where: { $0.id == id }) {
+            pantries.remove(at: index)
+            print("Pantries after remove: ")
+            print(pantries)
+        }
     }
     func getExpiringItem() -> [PantryItemModel] {
         let shuffledPantries = pantries.shuffled()

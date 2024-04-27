@@ -12,12 +12,16 @@ struct PantrySection: View {
     var sectionTitle: PantrySectionModel
     @Environment(\.defaultMinListRowHeight) var minRowHeight
     @EnvironmentObject var pantryItemManager: PantryItemManager
+    @EnvironmentObject var abtManager: ABTManager
     @State private var isEditing = false
     
     func deleteItems (at offsets: IndexSet) {
         // Delete items from the itemList
-        pantryItemManager.remove(offsets: offsets)
-        print("hihi")
+//        pantryItemManager.remove(offsets: offsets)
+        print("Pantries after remove: ")
+        pantryItemManager.pantries.remove(atOffsets: offsets)
+        print(pantryItemManager.pantries)
+        print("hihihihihihihihihihihihihihihihihihihihihihihihi")
     }
     
     var body: some View {
@@ -40,20 +44,32 @@ struct PantrySection: View {
                 
             }
             
-            if (!itemList.isEmpty) {
-//                VStack {
-                    List {
-                        Section {
-                            ForEach(itemList) { item in
-                                    PantryItem(pantryItem: item, pantryItemSectionTitle: sectionTitle)
-                                }
-                            .onDelete(perform: deleteItems)
+            if (abtManager.isSwipeDelete) {
+                if (!itemList.isEmpty) {
+    //                VStack {
+                        List {
+                            Section {
+                                ForEach(itemList) { item in
+                                        PantryItem(pantryItem: item, pantryItemSectionTitle: sectionTitle)
+                                    }
+                                .onDelete(perform: deleteItems)
+                            }
                         }
-                    }
-//                    .frame(minHeight: minRowHeight * 3).border(Color.red)
-//                }
-//                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-//                .padding(.bottom, 10)
+    //                    .frame(minHeight: minRowHeight * 3).border(Color.red)
+    //                }
+    //                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    //                .padding(.bottom, 10)
+                }
+            } else {
+                if (!itemList.isEmpty) {
+                    VStack {
+                                ForEach(itemList) { item in
+                                        PantryItem(pantryItem: item, pantryItemSectionTitle: sectionTitle)
+                            }
+                        }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .padding(.bottom, 10)
+                }
             }
         }
         

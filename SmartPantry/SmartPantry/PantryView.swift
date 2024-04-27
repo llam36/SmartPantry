@@ -10,6 +10,7 @@ import os
 
 struct PantryView: View {
     @EnvironmentObject var pantryItemManager: PantryItemManager
+    @EnvironmentObject var abtManager: ABTManager
     @State private var startTime = Date()
 
     var body: some View {
@@ -21,14 +22,22 @@ struct PantryView: View {
                     let timeSpent = Date().timeIntervalSince(startTime)
                     logTimeSpent(viewName: "PantryView", timeSpent: timeSpent)
                 }
-
-
-//            ScrollView {
+                
+            if (abtManager.isSwipeDelete) {
+//                Text("SWIPE")
                 SloganCard()
                 PantrySection(itemList: pantryItemManager.pantries, sectionTitle: REFRIGERATOR_SECTION_TITLE)
-//            }
-//            .frame(maxHeight: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/)
-//            .background(Color(white: 0.95))
+            } else {
+//                Text("NO SWIPE")
+                ScrollView {
+                    SloganCard()
+                    PantrySection(itemList: pantryItemManager.pantries, sectionTitle: REFRIGERATOR_SECTION_TITLE)
+                }
+                .frame(maxHeight: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/)
+                .background(Color(white: 0.95))
+            }
+
+
         }
         .frame(maxHeight: /*@START_MENU_TOKEN@*/ .infinity/*@END_MENU_TOKEN@*/)
         .background(Color(.white))
@@ -74,5 +83,5 @@ struct PantryView: View {
 
 #Preview {
     PantryView()
-        .environmentObject(PantryItemManager())
+        .environmentObject(PantryItemManager()).environmentObject(ABTManager())
 }
